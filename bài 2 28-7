@@ -21,7 +21,6 @@ namespace LabTT
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.WriteLine("***************************************************");
             Console.WriteLine("Chương trình quản lý đơn hàng");
             Console.WriteLine("1. Xem trạng thái đơn hàng mới tạo");
             Console.WriteLine("2. Xem trạng thái đơn hàng đang xử lý");
@@ -29,7 +28,6 @@ namespace LabTT
             Console.WriteLine("4. Xem trạng thái đơn hàng đã giao");
             Console.WriteLine("5. Xem trạng thái đơn hàng đã hủy");
             Console.WriteLine("6. Thoát chương trình");
-            Console.WriteLine("***************************************************");
 
             Console.Write("Vui lòng chọn một tùy chọn (1-5): ");
             int choice = int.Parse(Console.ReadLine());
