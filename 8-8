@@ -1,28 +1,29 @@
-CREATE DATABASE BAICSDL;
-
+CREATE DATABASE  BAICSDL;
 USE BAICSDL;
-CREATE TABLE Users (
+
+CREATE TABLE  Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('quản lý', 'nhân viên') NOT NULL,
-    PRIMARY KEY (user_id)
+    role ENUM('quản lý', 'nhân viên') NOT NULL
 );
+
 CREATE TABLE Tasks (
     task_id INT PRIMARY KEY AUTO_INCREMENT,
-    Tasks_name VARCHAR(50) NOT NULL,
-    user_create int NOT NULL,
-    date_start datetime,
-    date_end datetime,
-    PRIMARY KEY (task_id),
-    FOREIGN KEY (created_by) REFERENCES Users(user_id)
+    task_name VARCHAR(50) NOT NULL,
+    user_create INT NOT NULL,       
+    user_assignee INT NOT NULL,     
+    date_start DATETIME,
+    date_end DATETIME,
+    FOREIGN KEY (user_create) REFERENCES Users(user_id),
+    FOREIGN KEY (user_assignee) REFERENCES Users(user_id)
 );
 CREATE TABLE TasksStatus (
-    TasksStatus_id INT PRIMARY KEY AUTO_INCREMENT,
-    Task_id INT NOT NULL,
-    user_id int,
-    Tasks_status ENUM('pending', 'done','can"t complete') NOT NULL,
-    Update_time datetime,
-    PRIMARY KEY (TasksStatus_id),
+    task_status_id INT PRIMARY KEY AUTO_INCREMENT,
+    task_id INT NOT NULL,
+    user_id INT NOT NULL, 
+    task_status ENUM('pending', 'done', 'can''t complete') NOT NULL,
+    update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (task_id) REFERENCES Tasks(task_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
