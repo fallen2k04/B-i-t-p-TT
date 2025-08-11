@@ -1,0 +1,41 @@
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    role ENUM('manager', 'user') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE Tasks (
+    task_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_by INT NOT NULL,
+    assigned_to INT NOT NULL,
+    status ENUM('pending', 'done', 'cant_complete') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES Users(user_id),
+    FOREIGN KEY (assigned_to) REFERENCES Users(user_id)
+);
+CREATE TABLE TaskStatusHistory (
+    history_id INT PRIMARY KEY AUTO_INCREMENT,
+    task_id INT NOT NULL,
+    status ENUM('pending', 'done', 'cant_complete') NOT NULL,
+    changed_by INT NOT NULL,
+    changed_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (task_id) REFERENCES Tasks(task_id),
+    FOREIGN KEY (changed_by) REFERENCES Users(user_id)
+);
+INSERT INTO Users (user_id, username, password, email, role) VALUES
+(1,'admin1', 'minh123', 'admin123@gmail.com', 'manager'),
+(2,'user1', 'hoang123', 'hoangtdlo@gmail.com', 'user'),
+(3,'user2', 'hieu123', 'hieu010ryo@gmail.com', 'user');
+
+INSERT INTO Tasks (title, task_id, description, created_by, assigned_to, status) VALUES
+('Complete project report', 1,'đã hoàn thành nhiệm vụ',1, 2, 'done'),
+('Update website', 2, 'thiết kế hệ thống',1, 1, 'pending'),
+('Fix bugs', 3, 'giải quyết thanh toán',1, 3, 'cant_complete');
+
+INSERT INTO TaskStatusHistory (task_id, status, changed_by) VALUES
+(1, 'pending', 2),
+(3, 'done', 3);
