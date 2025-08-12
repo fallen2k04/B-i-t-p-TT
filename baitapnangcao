@@ -1,0 +1,197 @@
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role_id INT NOT NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+CREATE TABLE stores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    owner_id INT NOT NULL,
+    created_by INT,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES users(id),
+    FOREIGN KEY (created_by) REFERENCES users(id)
+);
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    store_id INT NOT NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (store_id) REFERENCES stores(id)
+);
+CREATE TABLE carts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES users(id)
+);
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (cart_id) REFERENCES carts(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    status ENUM('pending', 'processing', 'complete', 'cancelled') DEFAULT 'pending',
+    total_amount DECIMAL(10,2) DEFAULT 0,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES users(id)
+);
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price_at_time DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+INSERT INTO roles (name) VALUES
+('admin'),
+('owner'),
+('customer');
+INSERT INTO users (name, email, password, role_id, created_at)VALUES 
+('Nguyen Hong Minh', 'minh2k004@gmail.com', '123456', 1, NOW()),
+('Nong Ngoc Hoang', 'hoangl@gmail.com', '123456', 1, NOW()),
+('Trinh Van Hieu', 'hieul@gmail.com', '123456', 2, NOW()),
+('Tran Ky Vy', 'Vyl@gmail.com', '123456', 2, NOW()),
+('Nguyen Hai Duc', 'Ducl@gmail.com', '123456', 2, NOW()),
+('Nguyen Dang Khoa', 'khoal@gmail.com', '123456', 2, NOW()),
+('Dang Thanh Tung', 'Tungl@gmail.com', '123456', 2, NOW()),
+('Dang Khe', 'Yenl@gmail.com', '123456', 2, NOW()),
+('Nguyen Tuan Minh', 'minhhocgoi@gmail.com', '123456', 2, NOW()),
+('Hoang Gia Minh', 'Minhloptruong@gmail.com', '123456', 2, NOW()),
+('Nguyen Truong Quan', 'quanbophu@gmail.com', '123456', 2, NOW()),
+('Nguyen Ngoc Phu', 'PhuboQuan@gmail.com', '123456', 2, NOW()),
+('Nguyen Nguyen Giap', 'Giapprovip@gmail.com', '123456', 3, NOW()),
+('Duong Tuan An', 'TuanAn@gmail.com', '123456', 3, NOW()),
+('Le Dinh Anh', 'DinhAnh@gmail.com', '123456', 3, NOW()),
+('Do Duc Dong', 'Dong@gmail.com', '123456', 3, NOW()),
+('Bui Quoc Khanh', 'EmKhanhtayto@gmail.com', '123456', 3, NOW()),
+('NDo Hoai Nam', 'HoaiNam@gmail.com', '123456', 3, NOW()),
+('Ha Ngoc Nam', 'NgocNam@gmail.com', '123456', 3, NOW()),
+('Lam Van Quyen', 'VanQuyen@gmail.com', '123456', 3, NOW()),
+('Phan Tien Son', 'TienSon@gmail.com', '123456', 3, NOW()),
+('Nguyen Ngoc Thanh', 'NgocThanh@gmail.com', '123456', 3, NOW()),
+('Nguyen Tien Thanh', 'TienThanh@gmail.com', '123456', 3, NOW());
+INSERT INTO stores (name, owner_id, created_by, created_at)VALUES 
+('quanao1', 1, 1, NOW()),
+('quanao2', 2, 2, NOW()),
+('quanao3', 3, 1, NOW()),
+('quanao4', 4, 2, NOW()),
+('quanao5', 5, 1, NOW()),
+('quanao6', 6, 2, NOW()),
+('quanao7', 7, 1, NOW()),
+('quanao8', 8, 2, NOW()),
+('quanao9', 9, 1, NOW()),
+('quanao10', 10, 2, NOW());
+INSERT INTO products (code, name, description, price, store_id, created_at)VALUES
+('001', 'Áo Thun Nam', 'Áo thun cotton 100%', 150000, 1, NOW()),
+('002', 'Quần Jean Nữ', 'Quần jean co giãn', 250000, 1, NOW()),
+('003', 'Giày Sneaker', 'Sneaker thời trang nam nữ', 500000, 2, NOW()),
+('004', 'Túi Xách Nữ', 'Túi xách da PU', 350000, 2, NOW()),
+('005', 'Áo Khoác Hoodie', 'Hoodie nỉ ấm áp', 300000, 3, NOW()),
+('006', 'Mũ Lưỡi Trai', 'Mũ lưỡi trai nam nữ', 120000, 3, NOW()),
+('007', 'Balo Laptop', 'Balo chống sốc 15 inch', 400000, 4, NOW()),
+('008', 'Đồng Hồ Thời Trang', 'Đồng hồ dây da', 600000, 4, NOW()),
+('009', 'Tai Nghe Bluetooth', 'Tai nghe không dây', 250000, 5, NOW()),
+('010', 'Áo Polo Nam', 'Áo polo cotton', 200000, 5, NOW());
+INSERT INTO carts (customer_id, created_at)VALUES
+(5, NOW()),
+(6, NOW()),
+(7, NOW()),
+(8, NOW()),
+(9, NOW()),
+(10, NOW());
+INSERT INTO cart_items (cart_id, product_id, quantity)VALUES
+(1, 1, 1),  
+(1, 3, 1), 
+(2, 2, 1),  
+(2, 4, 1),  
+(3, 5, 1),  
+(3, 6, 1), 
+(4, 7, 1),  
+(4, 8, 1),  
+(5, 9, 1), 
+(6, 10, 1); 
+INSERT INTO orders (customer_id, status, total_amount, created_at)
+VALUES
+(5, 'complete', 800000, NOW()),
+(6, 'complete', 600000, NOW()),
+(7, 'pending', 450000, NOW()),
+(8, 'complete', 900000, NOW()),
+(9, 'processing', 300000, NOW()),
+(10, 'complete', 750000, NOW()),
+(5, 'complete', 500000, NOW()),
+(6, 'cancelled', 200000, NOW()),
+(7, 'complete', 650000, NOW()),
+(8, 'complete', 400000, NOW());
+INSERT INTO order_items (order_id, product_id, quantity, price_at_time)
+VALUES
+(1, 1, 1, 150000),  
+(1, 3, 1, 500000),  
+(2, 2, 1, 250000),
+(2, 4, 2, 700000),
+(3, 5, 1, 300000),
+(3, 6, 3, 360000),
+(4, 7, 1, 400000),
+(4, 8, 1, 600000),
+(5, 9, 1, 250000),
+(6, 10, 1, 200000),
+(7, 1, 1, 150000),
+(7, 2, 2, 250000),
+(8, 3, 1, 500000),
+(9, 4, 1, 350000),
+(9, 5, 2, 600000),
+(10, 6, 1, 120000),
+(10, 9, 1, 250000);
+SELECT 
+    s.id AS store_id,
+    s.name AS store_name,
+    SUM(oi.quantity) AS total_sold
+FROM stores s
+JOIN products p ON s.id = p.store_id
+JOIN order_items oi ON p.id = oi.product_id
+JOIN orders o ON oi.order_id = o.id
+WHERE o.status = 'complete'
+GROUP BY s.id, s.name
+ORDER BY total_sold DESC
+LIMIT 10;
+SELECT 
+    p.id AS product_id,
+    p.name AS product_name,
+    SUM(oi.quantity) AS total_sold
+FROM products p
+JOIN order_items oi ON p.id = oi.product_id
+JOIN orders o ON oi.order_id = o.id
+WHERE o.status = 'complete'
+GROUP BY p.id, p.name
+ORDER BY total_sold DESC
+LIMIT 10;
+SELECT 
+    u.id AS customer_id,
+    u.name AS customer_name,
+    COUNT(o.id) AS total_orders,
+    SUM(oi.quantity) AS total_items
+FROM users u
+JOIN orders o ON u.id = o.customer_id
+JOIN order_items oi ON o.id = oi.order_id
+WHERE o.status = 'complete'
+GROUP BY u.id, u.name
+ORDER BY total_items DESC
+LIMIT 10;
