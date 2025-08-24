@@ -1,0 +1,61 @@
+using LibraryEF.Models;
+using var context = new LibraryContext();
+context.Database.EnsureDeleted();
+context.Database.EnsureCreated();
+
+// Seed data
+var book1 = new Book { Title = "C# Programming", Author = "Microsoft", PublishedYear = 2022 };
+var book2 = new Book { Title = "Database Systems", Author = "Elmasri", PublishedYear = 2020 };
+var book3 = new Book { Title = "Entity Framework Core", Author = "Julie Lerman", PublishedYear = 2021 };
+
+var member1 = new Member { Name = "Alice", Email = "alice@example.com", JoinDate = DateTime.Now.AddMonths(-2) };
+var member2 = new Member { Name = "Bob", Email = "bob@example.com", JoinDate = DateTime.Now.AddMonths(-1) };
+
+context.Books.AddRange(book1, book2, book3);
+context.Members.AddRange(member1, member2);
+context.SaveChanges();
+
+// Borrow records
+context.Borrows.AddRange(
+    new Borrow { Book = book1, Member = member1, BorrowDate = DateTime.Now.AddDays(-10), ReturnDate = null },
+    new Borrow { Book = book2, Member = member1, BorrowDate = DateTime.Now.AddDays(-5), ReturnDate = DateTime.Now.AddDays(-1) },
+    new Borrow { Book = book3, Member = member2, BorrowDate = DateTime.Now.AddDays(-7), ReturnDate = null }
+);
+context.SaveChanges();
+
+
+// 1. In danh sách tất cả sách
+Console.WriteLine("📚 Danh sách sách:"); foreach (var b in context.Books)
+    Console.WriteLine($"- {b.Title} ({b.Author}, {b.PublishedYear})");
+
+Console.WriteLine();
+
+// 2. In danh sách thành viên
+Console.WriteLine("👥 Danh sách thành viên:");
+foreach (var m in context.Members)
+    Console.WriteLine($"- {m.Name} ({m.Email})");
+
+Console.WriteLine();
+
+// 3. In danh sách thành viên + sách họ mượn
+Console.WriteLine("📖 Thành viên và sách đã mượn:");
+var membersWithBooks = context.Members
+    .Select(m => new {
+        m.Name,
+        BorrowedBooks = m.Borrows.Select(b => b.Book.Title).ToList()
+    }).ToList();
+
+foreach (var m in membersWithBooks)
+    Console.WriteLine($"{m.Name} đã mượn: {string.Join(", ", m.BorrowedBooks)}");
+
+Console.WriteLine();
+
+// 4. Sách chưa trả
+Console.WriteLine("⏳ Sách đang được mượn (chưa trả):");
+var borrowedBooks = context.Borrows
+    .Where(b => b.ReturnDate == null)
+    .Select(b => new { b.Book.Title, Member = b.Member.Name, b.BorrowDate })
+    .ToList();
+
+foreach (var b in borrowedBooks)
+    Console.WriteLine($"{b.Title} - được mượn bởi {b.Member} vào ngày {b.BorrowDate:dd/MM/yyyy}");
