@@ -1,0 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using LibraryEF.Models;
+
+public class LibraryContext : DbContext
+{
+    public DbSet<Book> Books => Set<Book>();
+    public DbSet<Member> Members => Set<Member>();
+    public DbSet<Borrow> Borrows => Set<Borrow>();
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlite("Data Source=Library.db");
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Borrow>()
+            .HasKey(b => new { b.BookId, b.MemberId, b.BorrowDate });
+    }
+}
