@@ -1,0 +1,319 @@
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace bai6.Migrations
+{
+    /// <inheritdoc />
+    public partial class InitWebDB : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "acter",
+                columns: table => new
+                {
+                    idActer = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Acter_name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    sexsual = table.Column<string>(type: "enum('Nam','Nữ')", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    nationality = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idActer);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "customer",
+                columns: table => new
+                {
+                    idcustomer = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    customer_full_name = table.Column<int>(type: "int", nullable: false),
+                    sexsual = table.Column<string>(type: "enum('Nam','Nữ')", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    customer_address = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idcustomer);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "store manager",
+                columns: table => new
+                {
+                    idStoremanager = table.Column<int>(name: "idStore manager", type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idStoremanager);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "shelf",
+                columns: table => new
+                {
+                    idshelf = table.Column<int>(type: "int", nullable: false),
+                    location = table.Column<int>(type: "int", nullable: false),
+                    Storemanager_idStoremanager = table.Column<int>(name: "Store manager_idStore manager", type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idshelf);
+                    table.ForeignKey(
+                        name: "fk_shelf_Store manager1",
+                        column: x => x.Storemanager_idStoremanager,
+                        principalTable: "store manager",
+                        principalColumn: "idStore manager");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "film",
+                columns: table => new
+                {
+                    idFilm = table.Column<int>(type: "int", nullable: false),
+                    Film_name = table.Column<int>(type: "int", nullable: false),
+                    shelf_idshelf = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idFilm);
+                    table.ForeignKey(
+                        name: "fk_Film_shelf1",
+                        column: x => x.shelf_idshelf,
+                        principalTable: "shelf",
+                        principalColumn: "idshelf");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "coutry",
+                columns: table => new
+                {
+                    idCoutry = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Coutry_Name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Film_idFilm = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idCoutry);
+                    table.ForeignKey(
+                        name: "fk_Coutry_Film1",
+                        column: x => x.Film_idFilm,
+                        principalTable: "film",
+                        principalColumn: "idFilm");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "recording system",
+                columns: table => new
+                {
+                    idrecording_system = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    recording_system_name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    characteristic = table.Column<int>(type: "int", nullable: false),
+                    Film_idFilm = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idrecording_system);
+                    table.ForeignKey(
+                        name: "fk_recording system_Film1",
+                        column: x => x.Film_idFilm,
+                        principalTable: "film",
+                        principalColumn: "idFilm");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "register",
+                columns: table => new
+                {
+                    Film_idFilm = table.Column<int>(type: "int", nullable: false),
+                    Acter_idActer = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => new { x.Film_idFilm, x.Acter_idActer })
+                        .Annotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                    table.ForeignKey(
+                        name: "fk_Film_has_Acter_Acter1",
+                        column: x => x.Acter_idActer,
+                        principalTable: "acter",
+                        principalColumn: "idActer");
+                    table.ForeignKey(
+                        name: "fk_Film_has_Acter_Film1",
+                        column: x => x.Film_idFilm,
+                        principalTable: "film",
+                        principalColumn: "idFilm");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "tape",
+                columns: table => new
+                {
+                    idTape = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Tape_Brand = table.Column<string>(type: "enum('PAL','SEACAM')", nullable: false, collation: "utf8mb4_0900_ai_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    customer_idcustomer = table.Column<int>(type: "int", nullable: false),
+                    shelf_idshelf = table.Column<int>(type: "int", nullable: false),
+                    recordingsystem_idrecording_system = table.Column<int>(name: "recording system_idrecording_system", type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idTape);
+                    table.ForeignKey(
+                        name: "fk_Tape_customer",
+                        column: x => x.customer_idcustomer,
+                        principalTable: "customer",
+                        principalColumn: "idcustomer");
+                    table.ForeignKey(
+                        name: "fk_Tape_recording system1",
+                        column: x => x.recordingsystem_idrecording_system,
+                        principalTable: "recording system",
+                        principalColumn: "idrecording_system");
+                    table.ForeignKey(
+                        name: "fk_Tape_shelf1",
+                        column: x => x.shelf_idshelf,
+                        principalTable: "shelf",
+                        principalColumn: "idshelf");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateTable(
+                name: "producer",
+                columns: table => new
+                {
+                    idProducer = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Producer_Name = table.Column<int>(type: "int", nullable: false),
+                    Tape_idTape = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PRIMARY", x => x.idProducer);
+                    table.ForeignKey(
+                        name: "fk_Producer_Tape1",
+                        column: x => x.Tape_idTape,
+                        principalTable: "tape",
+                        principalColumn: "idTape");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_0900_ai_ci");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Coutry_Film1_idx",
+                table: "coutry",
+                column: "Film_idFilm");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Film_shelf1_idx",
+                table: "film",
+                column: "shelf_idshelf");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Producer_Tape1_idx",
+                table: "producer",
+                column: "Tape_idTape");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_recording system_Film1_idx",
+                table: "recording system",
+                column: "Film_idFilm");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Film_has_Acter_Acter1_idx",
+                table: "register",
+                column: "Acter_idActer");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Film_has_Acter_Film1_idx",
+                table: "register",
+                column: "Film_idFilm");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_shelf_Store manager1_idx",
+                table: "shelf",
+                column: "Store manager_idStore manager");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Tape_customer_idx",
+                table: "tape",
+                column: "customer_idcustomer");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Tape_recording system1_idx",
+                table: "tape",
+                column: "recording system_idrecording_system");
+
+            migrationBuilder.CreateIndex(
+                name: "fk_Tape_shelf1_idx",
+                table: "tape",
+                column: "shelf_idshelf");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "coutry");
+
+            migrationBuilder.DropTable(
+                name: "producer");
+
+            migrationBuilder.DropTable(
+                name: "register");
+
+            migrationBuilder.DropTable(
+                name: "tape");
+
+            migrationBuilder.DropTable(
+                name: "acter");
+
+            migrationBuilder.DropTable(
+                name: "customer");
+
+            migrationBuilder.DropTable(
+                name: "recording system");
+
+            migrationBuilder.DropTable(
+                name: "film");
+
+            migrationBuilder.DropTable(
+                name: "shelf");
+
+            migrationBuilder.DropTable(
+                name: "store manager");
+        }
+    }
+}
